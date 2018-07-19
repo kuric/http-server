@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Simple http-server</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/skeleton/2.0.4/skeleton.min.css">
+    <style>
+        input.file.hidden {
+            opacity: 0;
+            z-index: 2;
+            position: relative;
+        }
+        .file {
+            width: 300px;
+            margin: 0;
+        }
+        div.fakefile {
+            display: inline-block;
+            position: absolute;
+            top: 8px;
+            left: 0px;
+            width: 300px;
+            padding: 0;
+            margin: 0;
+            z-index: 1;
+            line-height: 90%;
+        }
+        div.fakefile input {
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <form method="POST" id="save" >
+        <input type="file" class="file hidden" name="file" >
+        <div class="fakefile"><input type="text" value="Select file"></div>
+        <input type="submit" value="Upload">
+    </form>
+
+    <script>
+        var form = document.getElementById('save');
+        form.onsubmit = function() {
+
+            var file = this.elements.file.files[0];
+            if(!file) return false;
+            var xhr = new XMLHttpRequest();
+            xhr.onload = xhr.onerror = function() {
+                if(this.status === 200) {
+                    alert('File saved!');
+                } else {
+                    alert('Error:' + this.status + ' ' + this.responseText);
+                }
+            };
+            xhr.open('POST', '/'+file.name, true);
+            xhr.send(file);
+            return false;
+        }
+    </script>
+</body>
+</html>
